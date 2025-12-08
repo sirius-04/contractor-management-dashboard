@@ -69,4 +69,12 @@ public class ContractorServiceImpl implements ContractorService {
 
         return ContractorMapper.mapToContractorDto(disabledContractor);
     }
+
+    @Override
+    public void deleteContractor(Long contractorId) {
+        Contractor foundContractor = contractorRepository.findById(contractorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Contractor not exist with given id: " + contractorId));
+
+        contractorRepository.deleteById(contractorId);
+    }
 }

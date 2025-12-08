@@ -10,4 +10,5 @@ public interface ContractorService {
     List<ContractorDto> getAllContractors();
     ContractorDto updateContractor(Long contractorId, ContractorDto updatedContractor);
     ContractorDto disableContractor(Long contractorId);
+    void deleteContractor(Long contractorId);
 }

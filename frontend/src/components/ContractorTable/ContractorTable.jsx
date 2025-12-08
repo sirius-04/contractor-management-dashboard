@@ -7,21 +7,32 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import AddContractorButton from "./AddContractorButton";
-import { contractorTableData } from "@/data/contractor-table-data";
 import { contractorColumns } from "./ContractorColumns";
+import { getAllContractors } from "@/services/ContractorService";
 
 export default function ContractorTable() {
-  const [sorting, setSorting] = React.useState([]);
-  const [columnFilters, setColumnFilters] = React.useState([]);
-  const [columnVisibility, setColumnVisibility] = React.useState({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [contractors, setContractors] = useState([]);
+
+  useEffect(() => {
+    fetchContractors();
+  }, [])
+
+  const fetchContractors = async () => {
+    const response = await getAllContractors();
+    setContractors(response.data);
+  }
 
   const table = useReactTable({
-    data: contractorTableData,
+    data: contractors,
     columns: contractorColumns,
     state: { sorting, columnFilters, columnVisibility, rowSelection },
     onSortingChange: setSorting,

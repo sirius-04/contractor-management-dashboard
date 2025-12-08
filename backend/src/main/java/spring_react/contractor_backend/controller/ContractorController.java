@@ -58,4 +58,12 @@ public class ContractorController {
 
         return ResponseEntity.ok(disabledContractor);
     }
+
+    // Delete Contractor
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteContractor(@PathVariable("id") Long id) {
+        contractorService.deleteContractor(id);
+
+        return ResponseEntity.ok("Contractor deleted successfully");
+    }
 }
