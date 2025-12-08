@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
+import { createContractor } from "@/services/ContractorService";
 
 const formSchema = z.object({
   name: z
@@ -24,7 +25,7 @@ const formSchema = z.object({
     .min(0, "Project count must not less than 0"),
 });
 
-export default function AddContractorButton() {
+export default function AddContractorButton({ onAdded }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,22 +36,37 @@ export default function AddContractorButton() {
   });
 
   async function onSubmit(data) {
-    console.log("Form data:", data);
-
-    const promise = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log("Promise resolved with data:", data);
-          resolve(data);
-        }, 2000);
-      });
+    const payload = {
+      ...data,
+      rating: 0.0,
+      status: "active"
     };
 
-    toast.promise(promise, {
-      loading: "Adding",
-      success: (resolvedData) => `${resolvedData.name} Added!`,
-      error: "Error",
+    console.log("Payload being sent:", payload);
+
+
+    const promise = async () => {
+      try {
+        const response = await createContractor(payload);
+        console.log("Response:", response);
+        return response.data;
+      } catch (err) {
+        console.error("AXIOS ERROR:", err);
+        throw err;
+      }
+    };
+
+
+    toast.promise(promise(), {
+      loading: "Adding...",
+      success: (result) => {
+        onAdded();
+        return `${result.name} added!`;
+      },
+      error: "Failed to add contractor",
     });
+
+    form.reset();
   }
 
   return (

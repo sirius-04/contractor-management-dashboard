@@ -64,7 +64,7 @@ export default function ContractorTable() {
           className="max-w-md"
         />
 
-        <AddContractorButton />
+        <AddContractorButton onAdded={fetchContractors} />
       </div>
 
       {/* TABLE */}
