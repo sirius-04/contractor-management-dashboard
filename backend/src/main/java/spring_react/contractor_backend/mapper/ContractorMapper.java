@@ -15,7 +15,7 @@ public class ContractorMapper {
         );
     }
 
-    public Contractor mapToContractor(ContractorDto contractorDto) {
+    public static Contractor mapToContractor(ContractorDto contractorDto) {
         return new Contractor(
                 contractorDto.getId(),
                 contractorDto.getName(),

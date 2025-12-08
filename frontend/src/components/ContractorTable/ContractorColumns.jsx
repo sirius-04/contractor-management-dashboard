@@ -70,8 +70,8 @@ function ContractorActions({ contractor }) {
           }}>
             Edit
           </DropdownMenuItem>
-          <DropdownMenuItem 
-            onClick={() => alert(`Disable ${contractor.name}`)} 
+          <DropdownMenuItem
+            onClick={() => alert(`Disable ${contractor.name}`)}
             className="text-destructive"
           >
             Disable
@@ -134,7 +134,7 @@ function ContractorActions({ contractor }) {
 }
 
 export const contractorColumns = [
-    {
+  {
     accessorKey: "id",
     header: ({ column }) => (
       <Button
@@ -148,7 +148,7 @@ export const contractorColumns = [
     ),
     cell: ({ row }) => <div className="font-mono text-sm ml-3">{row.getValue("id")}</div>,
   },
-  
+
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -210,7 +210,7 @@ export const contractorColumns = [
   },
 
   {
-    accessorKey: "ratings",
+    accessorKey: "rating",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -223,7 +223,7 @@ export const contractorColumns = [
       </Button>
     ),
     cell: ({ row }) => {
-      const rating = Number(row.getValue("ratings"));
+      const rating = Number(row.getValue("rating"));
       return (
         <div className="flex items-center justify-center gap-2">
           <div className="text-sm font-medium">{rating.toFixed(1)} / 10</div>
@@ -240,9 +240,9 @@ export const contractorColumns = [
       const bg =
         s === "active"
           ? "bg-green-100 text-green-800"
-          : s === "suspended"
+          : s === "inactive"
             ? "bg-yellow-100 text-yellow-800"
-            : "bg-gray-100 text-gray-800";
+            : "bg-red-100 text-red-800";
 
       return (
         <div className={`inline-flex items-center px-2 py-1 rounded-full text-sm font-medium ${bg}`}>
