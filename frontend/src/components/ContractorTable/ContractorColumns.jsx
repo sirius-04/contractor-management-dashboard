@@ -134,6 +134,21 @@ function ContractorActions({ contractor }) {
 }
 
 export const contractorColumns = [
+    {
+    accessorKey: "id",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() =>
+          column.toggleSorting(column.getIsSorted() === "asc")
+        }
+      >
+        ID <ArrowUpDown className="ml-2" />
+      </Button>
+    ),
+    cell: ({ row }) => <div className="font-mono text-sm ml-3">{row.getValue("id")}</div>,
+  },
+  
   {
     accessorKey: "name",
     header: ({ column }) => (
