@@ -42,9 +42,6 @@ export default function AddContractorButton({ onAdded }) {
       status: "active"
     };
 
-    console.log("Payload being sent:", payload);
-
-
     const promise = async () => {
       try {
         const response = await createContractor(payload);

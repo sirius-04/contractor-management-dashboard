@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
+import { updateContractor, disableContractor } from "@/services/ContractorService";
 
 const formSchema = z.object({
   name: z.string().min(1, "Contractor Name is required"),
@@ -22,7 +23,7 @@ const formSchema = z.object({
     .min(0, "Project count must not less than 0"),
 });
 
-function ContractorActions({ contractor }) {
+function ContractorActions({ contractor, onUpdated }) {
   const [editOpen, setEditOpen] = useState(false);
 
   const form = useForm({
@@ -34,22 +35,59 @@ function ContractorActions({ contractor }) {
     },
   });
 
-  async function onSubmit(data) {
-    console.log("Edit form data:", data);
-
-    const promise = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log("Promise resolved with data:", data);
-          resolve(data);
-        }, 2000);
-      });
+  async function onUpdate(data) {
+    const payload = {
+      ...data,
+      rating: contractor.rating,
+      status: contractor.status
     };
+
+    const promise = updateContractor(contractor.id, payload)
+      .then((response) => {
+        console.log("Response:", response);
+        return response.data;
+      })
+      .catch((err) => {
+        console.error("AXIOS ERROR:", err);
+        throw err;
+      });
 
     toast.promise(promise, {
       loading: "Updating",
-      success: (resolvedData) => `${resolvedData.name} Updated!`,
-      error: "Error updating contractor",
+      success: (result) => {
+        setEditOpen(false);
+        onUpdated();
+        return `${result.name} updated!`;
+      },
+      error: (err) => {
+        return err?.response?.data?.message || "Error updating contractor";
+      },
+    });
+
+    form.reset();
+  }
+
+  async function onDisable() {
+    const promise = disableContractor(contractor.id)
+      .then((response) => {
+        console.log("Response:", response);
+        return response.data;
+      })
+      .catch((err) => {
+        console.error("AXIOS ERROR:", err);
+        throw err;
+      });
+
+    toast.promise(promise, {
+      loading: "Disabling",
+      success: (result) => {
+        setEditOpen(false);
+        onUpdated();
+        return `${result.name} disabled!`;
+      },
+      error: (err) => {
+        return err?.response?.data?.message || "Error disabling contractor";
+      },
     });
   }
 
@@ -71,7 +109,7 @@ function ContractorActions({ contractor }) {
             Edit
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => alert(`Disable ${contractor.name}`)}
+            onClick={onDisable}
             className="text-destructive"
           >
             Disable
@@ -83,7 +121,7 @@ function ContractorActions({ contractor }) {
         triggerComponent={<div />}
         title="Edit Contractor"
         form={form}
-        onSubmit={onSubmit}
+        onUpdate={onUpdate}
         open={editOpen}
         onOpenChange={setEditOpen}
       >
@@ -133,7 +171,7 @@ function ContractorActions({ contractor }) {
   );
 }
 
-export const contractorColumns = [
+export const contractorColumns = (onUpdated) => [
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -256,7 +294,7 @@ export const contractorColumns = [
     id: "actions",
     cell: ({ row }) => {
       const contractor = row.original;
-      return <ContractorActions contractor={contractor} />;
+      return <ContractorActions contractor={contractor} onUpdated={onUpdated} />;
     },
   },
 ];

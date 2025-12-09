@@ -33,7 +33,7 @@ export default function ContractorTable() {
 
   const table = useReactTable({
     data: contractors,
-    columns: contractorColumns,
+    columns: contractorColumns(fetchContractors),
     state: { sorting, columnFilters, columnVisibility, rowSelection },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
