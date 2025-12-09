@@ -31,3 +31,11 @@ export const disableContractor = id => {
 export const deleteContractor = id => {
   return axios.delete(`${API_BASE_URL}/${id}`);
 };
+
+export const getSummary = () => {
+  return axios.get(`${API_BASE_URL}/summary`);
+};
+
+export const getTopRatedContractors = () => {
+    return axios.get(`${API_BASE_URL}/top-rated`);
+};

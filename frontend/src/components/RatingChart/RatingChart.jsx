@@ -1,4 +1,4 @@
-import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -10,23 +10,31 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
-const chartData = [
-  { contractor: "Hajimi", averageRating: 9.6 },
-  { contractor: "Zen Renovations", averageRating: 8.5 },
-  { contractor: "ProFix Solutions", averageRating: 7.7 },
-  { contractor: "BuildRight Sdn Bhd", averageRating: 7.4 },
-  { contractor: "Other Contractors", averageRating: 6.9 },
-];
-
+import { useState, useEffect } from "react";
+import { getTopRatedContractors } from "@/services/ContractorService";
 
 const chartConfig = {
   averageRating: {
     label: "Avg Rating",
+    color: "var(--chart-2)",
+  },
+  label: {
+    color: "var(--background)",
   },
 };
 
 export default function RatingChart() {
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    fetchTopRated();
+  }, []);
+
+  const fetchTopRated = async () => {
+    const response = await getTopRatedContractors();
+    setChartData(response.data);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -35,30 +43,50 @@ export default function RatingChart() {
 
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full h-80">
-            <BarChart
-              data={chartData}
+          <BarChart
+            accessibilityLayer
+            data={chartData}
+            layout="vertical"
+            margin={{
+              right: 30,
+            }}
+          >
+            <CartesianGrid horizontal={false} />
+            <YAxis
+              dataKey="contractor"
+              type="category"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              hide
+            />
+            <XAxis dataKey="averageRating" type="number" domain={[0, 5]} hide />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="line" />}
+            />
+            <Bar
+              dataKey="averageRating"
               layout="vertical"
-              margin={{ left: 25 }}
+              fill="var(--color-averageRating)"
+              radius={4}
             >
-              <YAxis
+              <LabelList
                 dataKey="contractor"
-                type="category"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
+                position="insideLeft"
+                offset={8}
+                className="fill-white"
+                fontSize={12}
               />
-              <XAxis dataKey="averageRating" type="number" hide />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Bar
+              <LabelList
                 dataKey="averageRating"
-                layout="vertical"
-                radius={5}
-                fill="#a4a8adff"
+                position="right"
+                offset={8}
+                className="fill-foreground"
+                fontSize={12}
               />
-            </BarChart>
+            </Bar>
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>

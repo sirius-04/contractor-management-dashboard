@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring_react.contractor_backend.dto.ContractorDto;
+import spring_react.contractor_backend.dto.ContractorRatingDto;
+import spring_react.contractor_backend.dto.SummaryStatsDto;
 import spring_react.contractor_backend.entity.Contractor;
 import spring_react.contractor_backend.service.ContractorService;
 
@@ -65,5 +67,21 @@ public class ContractorController {
         contractorService.deleteContractor(id);
 
         return ResponseEntity.ok("Contractor deleted successfully");
+    }
+
+    // Get Summary
+    @GetMapping("/summary")
+    public ResponseEntity<List<SummaryStatsDto>> getSummaryStats() {
+        List<SummaryStatsDto> stats = contractorService.getSummaryStats();
+
+        return ResponseEntity.ok(stats);
+    }
+
+    // Get Top Rated Contractors
+    @GetMapping("/top-rated")
+    public ResponseEntity<List<ContractorRatingDto>> getTopRatedContractors() {
+        List<ContractorRatingDto> topRated = contractorService.getTopRatedContractors();
+
+        return ResponseEntity.ok(topRated);
     }
 }

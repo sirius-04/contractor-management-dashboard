@@ -264,7 +264,7 @@ export const contractorColumns = (onUpdated) => [
       const rating = Number(row.getValue("rating"));
       return (
         <div className="flex items-center justify-center gap-2">
-          <div className="text-sm font-medium">{rating.toFixed(1)} / 10</div>
+          <div className="text-sm font-medium">{rating.toFixed(2)} / 5</div>
         </div>
       );
     },
